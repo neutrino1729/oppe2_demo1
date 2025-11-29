@@ -1,6 +1,4 @@
-# Ignore Feast data files
-data/*.db
-data/*.parquet
-
-# But keep the directory
-!data/.gitkeep
+# Feast generated files (not tracked in git)
+data/
+*.db
+__pycache__/
