@@ -71,108 +71,94 @@ jobs:
         echo "## 🛡️ Data Poisoning Check" >> report.md
         echo "" >> report.md
         python src/check_poisoning.py --data-path data/transactions.csv 2>&1 | tee -a report.md
-        
-        # Extract suspicious count
         SUSPICIOUS_COUNT=$(grep "Suspicious labels found:" report.md | tail -1 | awk '{print $4}' | tr -d ',' || echo "0")
-        echo "Suspicious count: $SUSPICIOUS_COUNT"
         echo "count=$SUSPICIOUS_COUNT" >> "$GITHUB_OUTPUT"
     
     - name: Validate Data Quality
       run: |
         SUSPICIOUS_COUNT="${{ steps.poison_check.outputs.count }}"
         if [ -z "$SUSPICIOUS_COUNT" ]; then SUSPICIOUS_COUNT=0; fi
-        
-        echo "Validating data quality with $SUSPICIOUS_COUNT suspicious labels"
-        
         if [ "$SUSPICIOUS_COUNT" -gt 1000 ]; then
-          echo "❌ Too many suspicious labels detected: $SUSPICIOUS_COUNT"
+          echo "❌ Too many suspicious labels: $SUSPICIOUS_COUNT"
           exit 1
         else
-          echo "✅ Data quality check passed (suspicious labels: $SUSPICIOUS_COUNT)"
+          echo "✅ Data quality check passed"
         fi
     
-    - name: Train Model (CI Mode - Direct CSV)
+    - name: Create CI Training Script
+      run: |
+        cat > train_ci.py << 'PYEOF'
+        import pandas as pd
+        from sklearn.tree import DecisionTreeClassifier
+        from sklearn.model_selection import train_test_split
+        from sklearn.metrics import f1_score, precision_score, recall_score, roc_auc_score
+        import joblib
+        import os
+        import json
+        
+        print("=" * 70)
+        print("🚀 TRAINING MODEL IN CI MODE")
+        print("=" * 70)
+        
+        df = pd.read_csv("data/transactions.csv")
+        print(f"\n📊 Loaded: {len(df):,} transactions")
+        
+        columns_to_drop = ['Class', 'Time']
+        if 'location' in df.columns:
+            columns_to_drop.append('location')
+        
+        X = df.drop(columns=columns_to_drop, errors='ignore')
+        y = df['Class']
+        
+        print(f"   Features: {X.shape[1]}")
+        print(f"   Fraud rate: {y.mean():.4%}")
+        
+        X_train, X_val, y_train, y_val = train_test_split(
+            X, y, test_size=0.2, random_state=42, stratify=y
+        )
+        
+        params = {
+            'class_weight': 'balanced',
+            'max_depth': 5,
+            'min_samples_split': 100,
+            'min_samples_leaf': 50,
+            'random_state': 42
+        }
+        
+        print(f"\n🔧 Training Decision Tree...")
+        model = DecisionTreeClassifier(**params)
+        model.fit(X_train, y_train)
+        
+        y_pred = model.predict(X_val)
+        y_pred_proba = model.predict_proba(X_val)[:, 1]
+        
+        f1 = f1_score(y_val, y_pred)
+        precision = precision_score(y_val, y_pred)
+        recall = recall_score(y_val, y_pred)
+        auc = roc_auc_score(y_val, y_pred_proba)
+        
+        print(f"\n📊 Model Performance:")
+        print(f"   F1-Score:    {f1:.4f}")
+        print(f"   Precision:   {precision:.4f}")
+        print(f"   Recall:      {recall:.4f}")
+        print(f"   AUC-ROC:     {auc:.4f}")
+        
+        os.makedirs("artifacts", exist_ok=True)
+        joblib.dump(model, "artifacts/model.pkl")
+        
+        with open("artifacts/params.json", "w") as f:
+            json.dump(params, f, indent=4)
+        
+        print(f"\n💾 Artifacts saved")
+        print("✅ TRAINING COMPLETE!")
+        PYEOF
+    
+    - name: Train Model
       run: |
         echo "" >> report.md
-        echo "## 🚀 Model Training (CI Mode)" >> report.md
+        echo "## 🚀 Model Training" >> report.md
         echo "" >> report.md
-        
-        python << 'PYTHON_EOF' 2>&1 | tee -a report.md
-import pandas as pd
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import f1_score, precision_score, recall_score, roc_auc_score
-import joblib
-import os
-import json
-
-print("=" * 70)
-print("🚀 TRAINING MODEL IN CI MODE")
-print("=" * 70)
-
-# Load data
-print("\n📊 Loading data from CSV...")
-df = pd.read_csv("data/transactions.csv")
-print(f"   Loaded: {len(df):,} transactions")
-
-# Prepare features
-columns_to_drop = ['Class', 'Time']
-if 'location' in df.columns:
-    columns_to_drop.append('location')
-
-X = df.drop(columns=columns_to_drop, errors='ignore')
-y = df['Class']
-
-print(f"\n📈 Dataset:")
-print(f"   Features: {X.shape[1]}")
-print(f"   Fraud rate: {y.mean():.4%}")
-
-# Train-test split
-X_train, X_val, y_train, y_val = train_test_split(
-    X, y, test_size=0.2, random_state=42, stratify=y
-)
-
-# Model parameters
-params = {
-    'class_weight': 'balanced',
-    'max_depth': 5,
-    'min_samples_split': 100,
-    'min_samples_leaf': 50,
-    'random_state': 42
-}
-
-print(f"\n🔧 Training Decision Tree...")
-model = DecisionTreeClassifier(**params)
-model.fit(X_train, y_train)
-
-# Predictions
-y_pred = model.predict(X_val)
-y_pred_proba = model.predict_proba(X_val)[:, 1]
-
-# Metrics
-f1 = f1_score(y_val, y_pred)
-precision = precision_score(y_val, y_pred)
-recall = recall_score(y_val, y_pred)
-auc = roc_auc_score(y_val, y_pred_proba)
-
-print(f"\n📊 Model Performance:")
-print(f"   F1-Score:    {f1:.4f}")
-print(f"   Precision:   {precision:.4f}")
-print(f"   Recall:      {recall:.4f}")
-print(f"   AUC-ROC:     {auc:.4f}")
-
-# Save artifacts
-os.makedirs("artifacts", exist_ok=True)
-joblib.dump(model, "artifacts/model.pkl")
-
-with open("artifacts/params.json", "w") as f:
-    json.dump(params, f, indent=4)
-
-print(f"\n💾 Artifacts saved to artifacts/")
-print("\n" + "=" * 70)
-print("✅ TRAINING COMPLETE!")
-print("=" * 70)
-PYTHON_EOF
+        python train_ci.py 2>&1 | tee -a report.md
     
     - name: Run Model Performance Tests
       run: |
@@ -184,21 +170,21 @@ PYTHON_EOF
     - name: Generate SHAP Explanations
       run: |
         echo "" >> report.md
-        echo "## 🧠 Model Explainability (SHAP)" >> report.md
+        echo "## 🧠 SHAP Explanations" >> report.md
         echo "" >> report.md
         python src/generate_explanations.py 2>&1 | tee -a report.md
     
     - name: Check Model Fairness
       run: |
         echo "" >> report.md
-        echo "## ⚖️ Model Fairness Audit" >> report.md
+        echo "## ⚖️ Fairness Audit" >> report.md
         echo "" >> report.md
         python src/check_fairness.py 2>&1 | tee -a report.md
     
     - name: Check Data Drift
       run: |
         echo "" >> report.md
-        echo "## 🌊 Data Drift Detection" >> report.md
+        echo "## 🌊 Drift Detection" >> report.md
         echo "" >> report.md
         python src/check_drift_simple.py 2>&1 | tee -a report.md
     
@@ -218,15 +204,9 @@ PYTHON_EOF
         path: report.md
         retention-days: 30
     
-    - name: Display Report Summary
-      if: always()
-      run: |
-        echo "📊 Pipeline Report Summary"
-        echo "=========================="
-        grep -E "^##|✅|❌|⚠️" report.md || echo "Report generated"
-    
     - name: Cleanup
       if: always()
       run: |
         rm -f gcp-key.json
+        rm -f train_ci.py
         echo "🧹 Cleanup complete"
