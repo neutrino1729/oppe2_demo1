@@ -1,0 +1,160 @@
+name: MLOps Fraud Detection Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  data-validation-and-training:
+    name: Data Validation & Model Training
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+    
+    - name: Cache pip packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Authenticate to Google Cloud
+      env:
+        GCP_CREDENTIALS_B64: ${{ secrets.GCP_CREDENTIALS_B64 }}
+      run: |
+        echo "$GCP_CREDENTIALS_B64" | base64 -d > gcp-key.json
+        echo "GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/gcp-key.json" >> $GITHUB_ENV
+        
+        # Verify JSON is valid
+        python3 -c "import json; json.load(open('gcp-key.json'))" && echo "✓ Valid JSON"
+    
+    - name: Install Google Cloud SDK
+      run: |
+        echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+        curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+        sudo apt-get update && sudo apt-get install -y google-cloud-cli
+    
+    - name: Configure DVC and Pull Data
+      run: |
+        gcloud auth activate-service-account --key-file=gcp-key.json
+        gcloud config set project theta-index-472515-d8
+        
+        dvc remote modify gcsremote credentialpath $(pwd)/gcp-key.json
+        dvc pull -v
+    
+    - name: Run Data Validation Tests
+      id: data_tests
+      run: |
+        echo "## 🧪 Data Validation Tests" >> report.md
+        pytest tests/test_data_validation.py -v >> report.md 2>&1 || true
+    
+    - name: Check for Data Poisoning
+      id: poison_check
+      run: |
+        echo "" >> report.md
+        echo "## 🛡️ Data Poisoning Check" >> report.md
+        python src/check_poisoning.py --data-path data/transactions.csv >> report.md
+        
+        # Extract suspicious count
+        SUSPICIOUS_COUNT=$(grep "Suspicious labels found:" report.md | awk '{print $4}' | tr -d ',')
+        echo "count=$SUSPICIOUS_COUNT" >> "$GITHUB_OUTPUT"
+    
+    - name: Validate Data Quality
+      run: |
+        if [ "${{ steps.poison_check.outputs.count }}" -gt 1000 ]; then
+          echo "❌ Error: Too many suspicious labels detected. Aborting."
+          exit 1
+        else
+          echo "✅ Data quality check passed."
+        fi
+    
+    - name: Setup Feast Feature Store
+      run: |
+        cd feature_repo
+        feast apply
+        python materialize.py
+        cd ..
+    
+    - name: Run Model Training
+      env:
+        CI: true
+      run: |
+        echo "" >> report.md
+        echo "## 🚀 Model Training" >> report.md
+        python src/train.py >> report.md
+    
+    - name: Run Model Performance Tests
+      run: |
+        echo "" >> report.md
+        echo "## 🧪 Model Performance Tests" >> report.md
+        pytest tests/test_model_performance.py -v >> report.md 2>&1 || true
+    
+    - name: Generate SHAP Explanations
+      run: |
+        echo "" >> report.md
+        echo "## 🧠 Model Explainability (SHAP)" >> report.md
+        python src/generate_explanations.py >> report.md
+    
+    - name: Check Model Fairness
+      run: |
+        echo "" >> report.md
+        echo "## ⚖️ Model Fairness Audit" >> report.md
+        python src/check_fairness.py >> report.md
+    
+    - name: Check Data Drift
+      run: |
+        echo "" >> report.md
+        echo "## 🌊 Data Drift Detection" >> report.md
+        python src/check_drift_simple.py >> report.md
+    
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ml-artifacts
+        path: artifacts/
+    
+    - name: Setup CML
+      if: github.event_name == 'pull_request'
+      uses: iterative/setup-cml@v2
+    
+    - name: Create CML Report
+      if: github.event_name == 'pull_request'
+      env:
+        REPO_TOKEN: ${{ secrets.CML_REPO_TOKEN }}
+      run: |
+        # Add SHAP visualization
+        echo "### 📊 SHAP Feature Importance" >> report.md
+        echo "![SHAP Summary](./artifacts/shap_summary.png)" >> report.md
+        
+        # Add model metrics
+        echo "" >> report.md
+        echo "### 📈 Model Metrics" >> report.md
+        cat artifacts/params.json >> report.md
+        
+        # Post comment
+        cml comment create report.md
+    
+    - name: Cleanup
+      if: always()
+      run: |
+        rm -f gcp-key.json
+        echo "🧹 Cleaned up credentials"
