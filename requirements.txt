@@ -1,0 +1,45 @@
+# Core ML libraries
+ipython
+scikit-learn
+joblib
+pytest
+numpy
+pandas
+matplotlib
+
+# Data versioning
+dvc
+dvc[gs]
+
+# Feature store
+feast
+
+# Code quality
+black
+flake8
+
+# Experiment tracking
+mlflow
+
+# GCP libraries
+google-cloud-aiplatform
+google-cloud-storage
+
+# Responsible AI & Monitoring
+shap
+fairlearn
+evidently
+
+# API Framework
+fastapi
+uvicorn[standard]
+pydantic
+
+# Testing
+locust
+
+# OpenTelemetry
+opentelemetry-api
+opentelemetry-sdk
+opentelemetry-instrumentation-fastapi
+opentelemetry-exporter-otlp-proto-grpc

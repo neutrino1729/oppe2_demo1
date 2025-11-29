@@ -1,0 +1,5 @@
+[core]
+    remote = gcsremote
+['remote "gcsremote"']
+    url = gs://theta-index-472515-d8-dvc-storage/fraud-detection
+    credentialpath = /home/rakesh_bhattacharjee24_gmail_com/mlops-key.json

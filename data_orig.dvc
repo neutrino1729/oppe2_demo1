@@ -1,0 +1,6 @@
+outs:
+- md5: d6b66d125725e45afdb86f14d89eb59c.dir
+  size: 150817718
+  nfiles: 2
+  hash: md5
+  path: data_orig
