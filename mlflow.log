@@ -1,0 +1,82 @@
+nohup: ignoring input
+2025/11/29 12:52:30 INFO mlflow.store.db.utils: Creating initial MLflow database tables...
+2025/11/29 12:52:30 INFO mlflow.store.db.utils: Updating database tables
+2025-11-29 12:52:30 INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+2025-11-29 12:52:30 INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+2025-11-29 12:52:30 INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+2025-11-29 12:52:30 INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+2025/11/29 12:52:30 INFO mlflow.store.db.utils: Creating initial MLflow database tables...
+2025/11/29 12:52:30 INFO mlflow.store.db.utils: Updating database tables
+2025-11-29 12:52:30 INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+2025-11-29 12:52:30 INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+[MLflow] Security middleware enabled with default settings (localhost-only). To allow connections from other hosts, use --host 0.0.0.0 and configure --allowed-hosts and --cors-allowed-origins.
+INFO:     Uvicorn running on http://0.0.0.0:5000 (Press CTRL+C to quit)
+INFO:     Started parent process [6500]
+INFO:     Started server process [6503]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Started server process [6502]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Started server process [6504]
+INFO:     Started server process [6505]
+INFO:     Waiting for application startup.
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:59028 - "GET /health HTTP/1.1" 200 OK
+2025/11/29 13:03:37 INFO mlflow.store.db.utils: Creating initial MLflow database tables...
+2025/11/29 13:03:37 INFO mlflow.store.db.utils: Updating database tables
+2025-11-29 13:03:37 INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+2025-11-29 13:03:37 INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+2025-11-29 13:03:38 INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+2025-11-29 13:03:38 INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO:     127.0.0.1:36928 - "GET /api/2.0/mlflow/experiments/get-by-name?experiment_name=Fraud_Detection_Training HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:36928 - "POST /api/2.0/mlflow/experiments/create HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36928 - "GET /api/2.0/mlflow/experiments/get?experiment_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36928 - "POST /api/2.0/mlflow/runs/create HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36928 - "POST /api/2.0/mlflow/runs/log-batch HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36928 - "POST /api/2.0/mlflow/runs/log-parameter HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36928 - "POST /api/2.0/mlflow/runs/log-parameter HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36928 - "POST /api/2.0/mlflow/runs/log-parameter HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36928 - "POST /api/2.0/mlflow/runs/log-parameter HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36928 - "POST /api/2.0/mlflow/runs/log-metric HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36928 - "POST /api/2.0/mlflow/runs/log-metric HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36928 - "POST /api/2.0/mlflow/runs/log-metric HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36928 - "POST /api/2.0/mlflow/runs/log-metric HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36928 - "POST /api/2.0/mlflow/runs/log-metric HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36928 - "GET /api/2.0/mlflow/runs/get?run_uuid=d27cf95cf37741029f7cd70b33f06b0c&run_id=d27cf95cf37741029f7cd70b33f06b0c HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36928 - "POST /api/2.0/mlflow/logged-models HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36928 - "POST /api/2.0/mlflow/runs/outputs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36928 - "GET /api/2.0/mlflow/runs/get?run_uuid=d27cf95cf37741029f7cd70b33f06b0c&run_id=d27cf95cf37741029f7cd70b33f06b0c HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36928 - "GET /api/2.0/mlflow/metrics/get-history?run_uuid=d27cf95cf37741029f7cd70b33f06b0c&metric_key=f1_score&run_id=d27cf95cf37741029f7cd70b33f06b0c&max_results=25000 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36928 - "GET /api/2.0/mlflow/metrics/get-history?run_uuid=d27cf95cf37741029f7cd70b33f06b0c&metric_key=precision&run_id=d27cf95cf37741029f7cd70b33f06b0c&max_results=25000 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36928 - "GET /api/2.0/mlflow/metrics/get-history?run_uuid=d27cf95cf37741029f7cd70b33f06b0c&metric_key=recall&run_id=d27cf95cf37741029f7cd70b33f06b0c&max_results=25000 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36928 - "GET /api/2.0/mlflow/metrics/get-history?run_uuid=d27cf95cf37741029f7cd70b33f06b0c&metric_key=auc_roc&run_id=d27cf95cf37741029f7cd70b33f06b0c&max_results=25000 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36928 - "GET /api/2.0/mlflow/metrics/get-history?run_uuid=d27cf95cf37741029f7cd70b33f06b0c&metric_key=fraud_rate&run_id=d27cf95cf37741029f7cd70b33f06b0c&max_results=25000 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36928 - "POST /api/2.0/mlflow/runs/log-batch HTTP/1.1" 200 OK
+2025/11/29 13:03:53 INFO mlflow.store.db.utils: Creating initial MLflow database tables...
+2025/11/29 13:03:53 INFO mlflow.store.db.utils: Updating database tables
+2025-11-29 13:03:53 INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+2025-11-29 13:03:53 INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+2025-11-29 13:03:53 INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+2025-11-29 13:03:53 INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO:     127.0.0.1:51768 - "GET /api/2.0/mlflow/logged-models/m-2c41d717f5fe48f3953084281aadd4a0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51768 - "PATCH /api/2.0/mlflow/logged-models/m-2c41d717f5fe48f3953084281aadd4a0 HTTP/1.1" 200 OK
+2025/11/29 13:03:54 INFO mlflow.store.db.utils: Creating initial MLflow database tables...
+2025/11/29 13:03:54 INFO mlflow.store.db.utils: Updating database tables
+2025-11-29 13:03:54 INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+2025-11-29 13:03:54 INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO:     127.0.0.1:51768 - "POST /api/2.0/mlflow/registered-models/create HTTP/1.1" 200 OK
+2025/11/29 13:03:54 INFO mlflow.store.db.utils: Creating initial MLflow database tables...
+2025/11/29 13:03:54 INFO mlflow.store.db.utils: Updating database tables
+2025-11-29 13:03:54 INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+2025-11-29 13:03:54 INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+2025-11-29 13:03:54 INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+2025-11-29 13:03:54 INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO:     127.0.0.1:51768 - "POST /api/2.0/mlflow/model-versions/create HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51768 - "GET /api/2.0/mlflow/logged-models/m-2c41d717f5fe48f3953084281aadd4a0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51768 - "GET /api/2.0/mlflow/logged-models/m-2c41d717f5fe48f3953084281aadd4a0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51768 - "PATCH /api/2.0/mlflow/logged-models/m-2c41d717f5fe48f3953084281aadd4a0/tags HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51768 - "GET /api/2.0/mlflow/runs/get?run_uuid=d27cf95cf37741029f7cd70b33f06b0c&run_id=d27cf95cf37741029f7cd70b33f06b0c HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51768 - "POST /api/2.0/mlflow/runs/update HTTP/1.1" 200 OK

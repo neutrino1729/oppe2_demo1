@@ -46,3 +46,19 @@ Thumbs.db
 # Coverage
 .coverage
 htmlcov/
+
+# MLflow
+mlflow.db
+mlflow.log
+mlruns/
+
+# Feast
+feature_repo/data/registry.db
+feature_repo/data/online_store.db
+
+# Model artifacts (tracked by DVC or regenerated)
+artifacts/*.pkl
+artifacts/*.json
+artifacts/*.png
+artifacts/*.html
+artifacts/*.txt
