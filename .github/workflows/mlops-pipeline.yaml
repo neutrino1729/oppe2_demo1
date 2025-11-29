@@ -61,64 +61,59 @@ jobs:
     - name: Run Data Validation Tests
       run: |
         echo "## 🧪 Data Validation Tests" >> report.md
-        pytest tests/test_data_validation.py -v >> report.md 2>&1 || true
+        echo "" >> report.md
+        pytest tests/test_data_validation.py -v 2>&1 | tee -a report.md || true
     
     - name: Check for Data Poisoning
       id: poison_check
       run: |
         echo "" >> report.md
         echo "## 🛡️ Data Poisoning Check" >> report.md
-        python src/check_poisoning.py --data-path data/transactions.csv >> report.md
+        echo "" >> report.md
+        python src/check_poisoning.py --data-path data/transactions.csv 2>&1 | tee -a report.md
+        
+        # Extract suspicious count
         SUSPICIOUS_COUNT=$(grep "Suspicious labels found:" report.md | tail -1 | awk '{print $4}' | tr -d ',' || echo "0")
+        echo "Suspicious count: $SUSPICIOUS_COUNT"
         echo "count=$SUSPICIOUS_COUNT" >> "$GITHUB_OUTPUT"
     
     - name: Validate Data Quality
       run: |
         SUSPICIOUS_COUNT="${{ steps.poison_check.outputs.count }}"
         if [ -z "$SUSPICIOUS_COUNT" ]; then SUSPICIOUS_COUNT=0; fi
+        
+        echo "Validating data quality with $SUSPICIOUS_COUNT suspicious labels"
+        
         if [ "$SUSPICIOUS_COUNT" -gt 1000 ]; then
-          echo "❌ Too many suspicious labels. Aborting."
+          echo "❌ Too many suspicious labels detected: $SUSPICIOUS_COUNT"
           exit 1
+        else
+          echo "✅ Data quality check passed (suspicious labels: $SUSPICIOUS_COUNT)"
         fi
-        echo "✅ Data quality check passed"
     
-    - name: Setup Feast Feature Store (CI Mode)
-      run: |
-        echo "🔧 Setting up Feast for CI environment..."
-        cd feature_repo
-        
-        # Run CI setup script
-        python setup_feast_ci.py
-        
-        # Apply Feast features (will create fresh registry)
-        feast apply
-        
-        cd ..
-        echo "✅ Feast configured successfully"
-    
-    - name: Run Model Training (without Feast)
-      env:
-        CI: true
-        SKIP_FEAST: true
+    - name: Train Model (CI Mode - Direct CSV)
       run: |
         echo "" >> report.md
-        echo "## 🚀 Model Training" >> report.md
-        echo "ℹ️  Training without Feast in CI (using direct CSV)" >> report.md
+        echo "## 🚀 Model Training (CI Mode)" >> report.md
+        echo "" >> report.md
         
-        # Create simplified training script for CI
-        python << 'PYTHON_EOF'
+        python << 'PYTHON_EOF' 2>&1 | tee -a report.md
 import pandas as pd
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import f1_score
+from sklearn.metrics import f1_score, precision_score, recall_score, roc_auc_score
 import joblib
 import os
 import json
 
-print("Training model in CI mode...")
+print("=" * 70)
+print("🚀 TRAINING MODEL IN CI MODE")
+print("=" * 70)
 
-# Load data directly
+# Load data
+print("\n📊 Loading data from CSV...")
 df = pd.read_csv("data/transactions.csv")
+print(f"   Loaded: {len(df):,} transactions")
 
 # Prepare features
 columns_to_drop = ['Class', 'Time']
@@ -128,12 +123,16 @@ if 'location' in df.columns:
 X = df.drop(columns=columns_to_drop, errors='ignore')
 y = df['Class']
 
+print(f"\n📈 Dataset:")
+print(f"   Features: {X.shape[1]}")
+print(f"   Fraud rate: {y.mean():.4%}")
+
 # Train-test split
 X_train, X_val, y_train, y_val = train_test_split(
     X, y, test_size=0.2, random_state=42, stratify=y
 )
 
-# Train model
+# Model parameters
 params = {
     'class_weight': 'balanced',
     'max_depth': 5,
@@ -142,12 +141,25 @@ params = {
     'random_state': 42
 }
 
+print(f"\n🔧 Training Decision Tree...")
 model = DecisionTreeClassifier(**params)
 model.fit(X_train, y_train)
 
-# Evaluate
-f1 = f1_score(y_val, model.predict(X_val))
-print(f"F1-Score: {f1:.4f}")
+# Predictions
+y_pred = model.predict(X_val)
+y_pred_proba = model.predict_proba(X_val)[:, 1]
+
+# Metrics
+f1 = f1_score(y_val, y_pred)
+precision = precision_score(y_val, y_pred)
+recall = recall_score(y_val, y_pred)
+auc = roc_auc_score(y_val, y_pred_proba)
+
+print(f"\n📊 Model Performance:")
+print(f"   F1-Score:    {f1:.4f}")
+print(f"   Precision:   {precision:.4f}")
+print(f"   Recall:      {recall:.4f}")
+print(f"   AUC-ROC:     {auc:.4f}")
 
 # Save artifacts
 os.makedirs("artifacts", exist_ok=True)
@@ -156,52 +168,65 @@ joblib.dump(model, "artifacts/model.pkl")
 with open("artifacts/params.json", "w") as f:
     json.dump(params, f, indent=4)
 
-print("✅ Model trained and saved successfully!")
+print(f"\n💾 Artifacts saved to artifacts/")
+print("\n" + "=" * 70)
+print("✅ TRAINING COMPLETE!")
+print("=" * 70)
 PYTHON_EOF
     
     - name: Run Model Performance Tests
       run: |
         echo "" >> report.md
         echo "## 🧪 Model Performance Tests" >> report.md
-        pytest tests/test_model_performance.py -v >> report.md 2>&1 || true
+        echo "" >> report.md
+        pytest tests/test_model_performance.py -v 2>&1 | tee -a report.md || true
     
     - name: Generate SHAP Explanations
       run: |
         echo "" >> report.md
         echo "## 🧠 Model Explainability (SHAP)" >> report.md
-        python src/generate_explanations.py >> report.md
+        echo "" >> report.md
+        python src/generate_explanations.py 2>&1 | tee -a report.md
     
     - name: Check Model Fairness
       run: |
         echo "" >> report.md
         echo "## ⚖️ Model Fairness Audit" >> report.md
-        python src/check_fairness.py >> report.md
+        echo "" >> report.md
+        python src/check_fairness.py 2>&1 | tee -a report.md
     
     - name: Check Data Drift
       run: |
         echo "" >> report.md
         echo "## 🌊 Data Drift Detection" >> report.md
-        python src/check_drift_simple.py >> report.md
+        echo "" >> report.md
+        python src/check_drift_simple.py 2>&1 | tee -a report.md
     
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
+      if: always()
       with:
         name: ml-artifacts
         path: artifacts/
         retention-days: 30
     
-    - name: Create CML Report
-      if: github.event_name == 'pull_request'
-      env:
-        REPO_TOKEN: ${{ secrets.CML_REPO_TOKEN }}
+    - name: Upload Report
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: pipeline-report
+        path: report.md
+        retention-days: 30
+    
+    - name: Display Report Summary
+      if: always()
       run: |
-        npm install -g @dvcorg/cml
-        echo "### 📊 SHAP Feature Importance" >> report.md
-        echo "![SHAP Summary](./artifacts/shap_summary.png)" >> report.md
-        cml comment create report.md || echo "CML comment skipped"
+        echo "📊 Pipeline Report Summary"
+        echo "=========================="
+        grep -E "^##|✅|❌|⚠️" report.md || echo "Report generated"
     
     - name: Cleanup
       if: always()
       run: |
         rm -f gcp-key.json
-        echo "🧹 Cleaned up"
+        echo "🧹 Cleanup complete"
