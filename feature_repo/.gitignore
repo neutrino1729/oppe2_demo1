@@ -1,0 +1,6 @@
+# Ignore Feast data files
+data/*.db
+data/*.parquet
+
+# But keep the directory
+!data/.gitkeep
