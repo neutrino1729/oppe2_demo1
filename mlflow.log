@@ -1,82 +1,50 @@
-nohup: ignoring input
-2025/11/29 12:52:30 INFO mlflow.store.db.utils: Creating initial MLflow database tables...
-2025/11/29 12:52:30 INFO mlflow.store.db.utils: Updating database tables
-2025-11-29 12:52:30 INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
-2025-11-29 12:52:30 INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
-2025-11-29 12:52:30 INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
-2025-11-29 12:52:30 INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
-2025/11/29 12:52:30 INFO mlflow.store.db.utils: Creating initial MLflow database tables...
-2025/11/29 12:52:30 INFO mlflow.store.db.utils: Updating database tables
-2025-11-29 12:52:30 INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
-2025-11-29 12:52:30 INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+2025/11/29 13:23:31 INFO mlflow.store.db.utils: Creating initial MLflow database tables...
+2025/11/29 13:23:31 INFO mlflow.store.db.utils: Updating database tables
+2025-11-29 13:23:31 INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+2025-11-29 13:23:31 INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+2025-11-29 13:23:31 INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+2025-11-29 13:23:31 INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+2025/11/29 13:23:31 INFO mlflow.store.db.utils: Creating initial MLflow database tables...
+2025/11/29 13:23:31 INFO mlflow.store.db.utils: Updating database tables
+2025-11-29 13:23:31 INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+2025-11-29 13:23:31 INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
 [MLflow] Security middleware enabled with default settings (localhost-only). To allow connections from other hosts, use --host 0.0.0.0 and configure --allowed-hosts and --cors-allowed-origins.
-INFO:     Uvicorn running on http://0.0.0.0:5000 (Press CTRL+C to quit)
-INFO:     Started parent process [6500]
-INFO:     Started server process [6503]
-INFO:     Waiting for application startup.
-INFO:     Application startup complete.
-INFO:     Started server process [6502]
-INFO:     Waiting for application startup.
-INFO:     Application startup complete.
-INFO:     Started server process [6504]
-INFO:     Started server process [6505]
-INFO:     Waiting for application startup.
-INFO:     Waiting for application startup.
-INFO:     Application startup complete.
-INFO:     Application startup complete.
-INFO:     127.0.0.1:59028 - "GET /health HTTP/1.1" 200 OK
-2025/11/29 13:03:37 INFO mlflow.store.db.utils: Creating initial MLflow database tables...
-2025/11/29 13:03:37 INFO mlflow.store.db.utils: Updating database tables
-2025-11-29 13:03:37 INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
-2025-11-29 13:03:37 INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
-2025-11-29 13:03:38 INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
-2025-11-29 13:03:38 INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
-INFO:     127.0.0.1:36928 - "GET /api/2.0/mlflow/experiments/get-by-name?experiment_name=Fraud_Detection_Training HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:36928 - "POST /api/2.0/mlflow/experiments/create HTTP/1.1" 200 OK
-INFO:     127.0.0.1:36928 - "GET /api/2.0/mlflow/experiments/get?experiment_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:36928 - "POST /api/2.0/mlflow/runs/create HTTP/1.1" 200 OK
-INFO:     127.0.0.1:36928 - "POST /api/2.0/mlflow/runs/log-batch HTTP/1.1" 200 OK
-INFO:     127.0.0.1:36928 - "POST /api/2.0/mlflow/runs/log-parameter HTTP/1.1" 200 OK
-INFO:     127.0.0.1:36928 - "POST /api/2.0/mlflow/runs/log-parameter HTTP/1.1" 200 OK
-INFO:     127.0.0.1:36928 - "POST /api/2.0/mlflow/runs/log-parameter HTTP/1.1" 200 OK
-INFO:     127.0.0.1:36928 - "POST /api/2.0/mlflow/runs/log-parameter HTTP/1.1" 200 OK
-INFO:     127.0.0.1:36928 - "POST /api/2.0/mlflow/runs/log-metric HTTP/1.1" 200 OK
-INFO:     127.0.0.1:36928 - "POST /api/2.0/mlflow/runs/log-metric HTTP/1.1" 200 OK
-INFO:     127.0.0.1:36928 - "POST /api/2.0/mlflow/runs/log-metric HTTP/1.1" 200 OK
-INFO:     127.0.0.1:36928 - "POST /api/2.0/mlflow/runs/log-metric HTTP/1.1" 200 OK
-INFO:     127.0.0.1:36928 - "POST /api/2.0/mlflow/runs/log-metric HTTP/1.1" 200 OK
-INFO:     127.0.0.1:36928 - "GET /api/2.0/mlflow/runs/get?run_uuid=d27cf95cf37741029f7cd70b33f06b0c&run_id=d27cf95cf37741029f7cd70b33f06b0c HTTP/1.1" 200 OK
-INFO:     127.0.0.1:36928 - "POST /api/2.0/mlflow/logged-models HTTP/1.1" 200 OK
-INFO:     127.0.0.1:36928 - "POST /api/2.0/mlflow/runs/outputs HTTP/1.1" 200 OK
-INFO:     127.0.0.1:36928 - "GET /api/2.0/mlflow/runs/get?run_uuid=d27cf95cf37741029f7cd70b33f06b0c&run_id=d27cf95cf37741029f7cd70b33f06b0c HTTP/1.1" 200 OK
-INFO:     127.0.0.1:36928 - "GET /api/2.0/mlflow/metrics/get-history?run_uuid=d27cf95cf37741029f7cd70b33f06b0c&metric_key=f1_score&run_id=d27cf95cf37741029f7cd70b33f06b0c&max_results=25000 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:36928 - "GET /api/2.0/mlflow/metrics/get-history?run_uuid=d27cf95cf37741029f7cd70b33f06b0c&metric_key=precision&run_id=d27cf95cf37741029f7cd70b33f06b0c&max_results=25000 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:36928 - "GET /api/2.0/mlflow/metrics/get-history?run_uuid=d27cf95cf37741029f7cd70b33f06b0c&metric_key=recall&run_id=d27cf95cf37741029f7cd70b33f06b0c&max_results=25000 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:36928 - "GET /api/2.0/mlflow/metrics/get-history?run_uuid=d27cf95cf37741029f7cd70b33f06b0c&metric_key=auc_roc&run_id=d27cf95cf37741029f7cd70b33f06b0c&max_results=25000 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:36928 - "GET /api/2.0/mlflow/metrics/get-history?run_uuid=d27cf95cf37741029f7cd70b33f06b0c&metric_key=fraud_rate&run_id=d27cf95cf37741029f7cd70b33f06b0c&max_results=25000 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:36928 - "POST /api/2.0/mlflow/runs/log-batch HTTP/1.1" 200 OK
-2025/11/29 13:03:53 INFO mlflow.store.db.utils: Creating initial MLflow database tables...
-2025/11/29 13:03:53 INFO mlflow.store.db.utils: Updating database tables
-2025-11-29 13:03:53 INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
-2025-11-29 13:03:53 INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
-2025-11-29 13:03:53 INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
-2025-11-29 13:03:53 INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
-INFO:     127.0.0.1:51768 - "GET /api/2.0/mlflow/logged-models/m-2c41d717f5fe48f3953084281aadd4a0 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51768 - "PATCH /api/2.0/mlflow/logged-models/m-2c41d717f5fe48f3953084281aadd4a0 HTTP/1.1" 200 OK
-2025/11/29 13:03:54 INFO mlflow.store.db.utils: Creating initial MLflow database tables...
-2025/11/29 13:03:54 INFO mlflow.store.db.utils: Updating database tables
-2025-11-29 13:03:54 INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
-2025-11-29 13:03:54 INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
-INFO:     127.0.0.1:51768 - "POST /api/2.0/mlflow/registered-models/create HTTP/1.1" 200 OK
-2025/11/29 13:03:54 INFO mlflow.store.db.utils: Creating initial MLflow database tables...
-2025/11/29 13:03:54 INFO mlflow.store.db.utils: Updating database tables
-2025-11-29 13:03:54 INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
-2025-11-29 13:03:54 INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
-2025-11-29 13:03:54 INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
-2025-11-29 13:03:54 INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
-INFO:     127.0.0.1:51768 - "POST /api/2.0/mlflow/model-versions/create HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51768 - "GET /api/2.0/mlflow/logged-models/m-2c41d717f5fe48f3953084281aadd4a0 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51768 - "GET /api/2.0/mlflow/logged-models/m-2c41d717f5fe48f3953084281aadd4a0 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51768 - "PATCH /api/2.0/mlflow/logged-models/m-2c41d717f5fe48f3953084281aadd4a0/tags HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51768 - "GET /api/2.0/mlflow/runs/get?run_uuid=d27cf95cf37741029f7cd70b33f06b0c&run_id=d27cf95cf37741029f7cd70b33f06b0c HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51768 - "POST /api/2.0/mlflow/runs/update HTTP/1.1" 200 OK
+Traceback (most recent call last):
+  File "/home/rakesh_bhattacharjee24_gmail_com/oppe2_demo1/.venv/lib/python3.10/site-packages/mlflow/server/auth/__init__.py", line 133, in <module>
+    from flask_wtf.csrf import CSRFProtect
+ModuleNotFoundError: No module named 'flask_wtf'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/rakesh_bhattacharjee24_gmail_com/oppe2_demo1/.venv/bin/mlflow", line 7, in <module>
+    sys.exit(cli())
+  File "/home/rakesh_bhattacharjee24_gmail_com/oppe2_demo1/.venv/lib/python3.10/site-packages/click/core.py", line 1485, in __call__
+    return self.main(*args, **kwargs)
+  File "/home/rakesh_bhattacharjee24_gmail_com/oppe2_demo1/.venv/lib/python3.10/site-packages/click/core.py", line 1406, in main
+    rv = self.invoke(ctx)
+  File "/home/rakesh_bhattacharjee24_gmail_com/oppe2_demo1/.venv/lib/python3.10/site-packages/click/core.py", line 1873, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+  File "/home/rakesh_bhattacharjee24_gmail_com/oppe2_demo1/.venv/lib/python3.10/site-packages/click/core.py", line 1269, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/home/rakesh_bhattacharjee24_gmail_com/oppe2_demo1/.venv/lib/python3.10/site-packages/click/core.py", line 824, in invoke
+    return callback(*args, **kwargs)
+  File "/home/rakesh_bhattacharjee24_gmail_com/oppe2_demo1/.venv/lib/python3.10/site-packages/click/decorators.py", line 34, in new_func
+    return f(get_current_context(), *args, **kwargs)
+  File "/home/rakesh_bhattacharjee24_gmail_com/oppe2_demo1/.venv/lib/python3.10/site-packages/mlflow/cli/__init__.py", line 592, in server
+    _run_server(
+  File "/home/rakesh_bhattacharjee24_gmail_com/oppe2_demo1/.venv/lib/python3.10/site-packages/mlflow/server/__init__.py", line 364, in _run_server
+    is_factory = _is_factory(app)
+  File "/home/rakesh_bhattacharjee24_gmail_com/oppe2_demo1/.venv/lib/python3.10/site-packages/mlflow/server/__init__.py", line 213, in _is_factory
+    mod = importlib.import_module(module)
+  File "/opt/conda/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/rakesh_bhattacharjee24_gmail_com/oppe2_demo1/.venv/lib/python3.10/site-packages/mlflow/server/auth/__init__.py", line 135, in <module>
+    raise ImportError(
+ImportError: The MLflow basic auth app requires the Flask-WTF package to perform CSRF validation. Please run `pip install mlflow[auth]` to install it.
